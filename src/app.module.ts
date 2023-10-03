@@ -14,7 +14,7 @@ import { TransactionModule } from './transaction/transaction.module';
     }),
     MongooseModule.forRoot(process.env.mongodb_url),
     BooksModule,
-    TransactionModule
+    TransactionModule,
   ],
 })
 export class AppModule {}

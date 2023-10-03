@@ -1,28 +1,44 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from './users.model';
 import { Model } from 'mongoose';
+import { User } from './schema/users.schema';
+import * as bcrypt from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { CreateUserDto } from './dto/createuser.dto';
+import { LoginUserDto } from './dto/loginuser.dto';
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
-     async registerUser(user: User) {
-        const newUser =  await this.userModel.create(user);
-        return newUser;
-     }
+   constructor(@InjectModel(User.name) private readonly userModel: Model<User>, private jwtService: JwtService) {}
+   
+   async register(createUserDto: CreateUserDto): Promise<{ token: string }> {
+      const { username, email, password } = createUserDto
+      const hashedPassword = await bcrypt.hash(password, 10)
+      const user = await this.userModel.create({
+         username,
+         email,
+         password: hashedPassword
+      })
 
-     async loginUser(email: string, password: string) {
-        const res = await this.userModel.find({ email, password }).exec();
-        return res;
-     }
+      const token = this.jwtService.sign({ id: user._id })
 
-     async getUserProfile(userId: string) {
-        const res = await this.userModel.findById(userId).exec();
-        return res;
-     }
+      return { token }
+   }
 
-     async editUserProfile(userId: string, updatedUser: User) {
-        const res = await this.userModel.findByIdAndUpdate(userId, updatedUser, { new: true }).exec();
-        return  res ;
-     }
-     
+   async login(loginUserDto: LoginUserDto): Promise<{ token: string }>{
+      const { email, password } = loginUserDto;
+      const user = await this.userModel.findOne({ email })
+
+      if(!user) {
+         throw new UnauthorizedException('Invalid email or password!')
+      }
+
+      const isPassword = await bcrypt.compare(password, user.password)
+
+      if(!isPassword) {
+         throw new UnauthorizedException('Invalid email or password!')
+      }
+
+      const token = this.jwtService.sign({ id: user._id });
+      return { token };
+   }
 }
