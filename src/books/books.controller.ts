@@ -11,6 +11,7 @@ export class BooksController {
     constructor(private booksService: BooksService) {}
 
     @Get()
+    @UseGuards(AuthGuard())
     async getAllBooks(@Query() query: ExpressQuery): Promise<Book[]> {
         return this.booksService.allBooks(query);
     }
@@ -22,21 +23,25 @@ export class BooksController {
     }
     
     @Get('search')
+    @UseGuards(AuthGuard())
     async searchBook(@Query() query: ExpressQuery): Promise<Book[]> {
         return await this.booksService.searchBook(query);
     }
 
     @Get(':id')
+    @UseGuards(AuthGuard())
     async getSelectedBook(@Param('id') id: string): Promise<Book> {
         return await this.booksService.selectBook(id);
     } 
 
     @Put(':id')
+    @UseGuards(AuthGuard())
     async updateBook(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto): Promise<Book> {
         return await this.booksService.updateBook(id, updateBookDto);
     }
     
     @Delete(':id')
+    @UseGuards(AuthGuard())
     async deleteBook(@Param('id') id: string): Promise<Book> {
         return await this.booksService.deleteBook(id);
     }
