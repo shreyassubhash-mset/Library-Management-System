@@ -11,12 +11,13 @@ export class UsersService {
    constructor(@InjectModel(User.name) private readonly userModel: Model<User>, private jwtService: JwtService) {}
    
    async register(createUserDto: CreateUserDto): Promise<{ token: string }> {
-      const { username, email, password } = createUserDto
+      const { username, email, password, userType } = createUserDto
       const hashedPassword = await bcrypt.hash(password, 10)
       const user = await this.userModel.create({
          username,
          email,
-         password: hashedPassword
+         password: hashedPassword,
+         userType,
       })
 
       const token = this.jwtService.sign({ id: user._id })
