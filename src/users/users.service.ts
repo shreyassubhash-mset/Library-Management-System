@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User } from './schema/users.schema';
@@ -24,7 +24,7 @@ export class UsersService {
       return { token }
    }
 
-   async login(loginUserDto: LoginUserDto): Promise<{ token: string }>{
+   async loginuser(loginUserDto: LoginUserDto): Promise<{ token: string }>{
       const { email, password } = loginUserDto;
       const user = await this.userModel.findOne({ email })
 
@@ -41,4 +41,31 @@ export class UsersService {
       const token = this.jwtService.sign({ id: user._id });
       return { token };
    }
+
+   async getUserDetails(userId: string): Promise<User> {
+      const user = await this.userModel.findById(userId);
+      if (!user) {
+         throw new NotFoundException('User not found');
+      }
+   
+      user.password = undefined;
+      return user;
+   }
+
+   async editUser(userId: string, updateUserDto: Partial<User>): Promise<User> {
+      const updatedUser = await this.userModel.findByIdAndUpdate(userId, updateUserDto, {
+         new: true,
+         runValidators: true,
+      });
+   
+      if (!updatedUser) {
+         throw new NotFoundException('User not found');
+      }
+   
+      updatedUser.password = undefined;
+   
+      return updatedUser;
+   }
+   
+   
 }

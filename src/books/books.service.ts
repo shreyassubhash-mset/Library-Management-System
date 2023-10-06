@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Book } from './schema/books.schema';
 import * as mongoose from 'mongoose';
 import { Query } from 'express-serve-static-core';
+import { CreateBookDto } from './dto/createbook.dto';
+import { UpdateBookDto } from './dto/updatebook.dto';
 
 @Injectable()
 export class BooksService {
@@ -14,12 +16,13 @@ export class BooksService {
         const currentPage = Number(query.page) || 1;
         const skipBooks = bookPerPage * (currentPage - 1);
 
+
         const allBooks = await this.bookModel.find().limit(bookPerPage).skip(skipBooks);
         return allBooks;
     }
 
-    async addBook(book: Book): Promise<Book> {
-        const newBook = await this.bookModel.create(book);
+    async addBook(createBookDto: CreateBookDto): Promise<Book> {
+        const newBook = await this.bookModel.create(createBookDto);
         return newBook;
     }
 
@@ -39,8 +42,8 @@ export class BooksService {
         return  selectedBook ;
     }
 
-    async updateBook(id: string, book: Book): Promise<Book> {
-        const updatedBook = await this.bookModel.findByIdAndUpdate(id, book, {
+    async updateBook(id: string, updateBookDto: UpdateBookDto): Promise<Book> {
+        const updatedBook = await this.bookModel.findByIdAndUpdate(id, updateBookDto, {
             new: true,
             runValidators: true,
         });
@@ -60,7 +63,7 @@ export class BooksService {
                 $options: 'i'
             }
         } : {}
-        const books = await this.bookModel.find({...keyword}); 
+        const books = await this.bookModel.find({ ...keyword }); 
         return books;
     }
 }

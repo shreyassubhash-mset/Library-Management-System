@@ -1,4 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import { Document } from "mongoose";
 
 export enum Category {
     ADVENTURE = 'Adventure',
@@ -10,7 +11,7 @@ export enum Category {
     timestamps: true
 })
 
-export class Book {
+export class Book extends Document{
 
     @Prop({required: true})
     title: string;

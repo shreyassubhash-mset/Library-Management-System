@@ -1,22 +1,26 @@
-import { Prop, Schema } from "@nestjs/mongoose";
-import { Date } from "mongoose";
-
+import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
+import * as mongoose from "mongoose";
+import { User } from "src/users/schema/users.schema";
+import { Book } from "src/books/schema/books.schema";
 
 @Schema({
     timestamps: true
 })
+export class Transaction extends mongoose.Document {
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
+    user: User;
 
-export class Transaction {
-    @Prop({ required: true })
-    bookid: string;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Book' })
+    book: Book;
 
-    @Prop({ required: true })
-    userid: string;
+    @Prop({ required: true, enum: [ 'Borrowed', 'Returned' ] })
+    status: string;
 
-    @Prop({ required: true })
-    borrowedtime: Date;
+    @Prop({ required: true, type: Date })
+    borrowedDate: Date;
 
-    @Prop()
-    returnedtime: Date;
-
+    @Prop({ type: Date })
+    returnedDate: Date; // Optional, as it's only set when the book is returned
 }
+
+export const TransactionSchema = SchemaFactory.createForClass(Transaction);

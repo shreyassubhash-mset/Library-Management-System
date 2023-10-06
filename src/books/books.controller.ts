@@ -17,8 +17,13 @@ export class BooksController {
 
     @Post('add')
     @UseGuards(AuthGuard())
-    async addNewBook(@Body() book: CreateBookDto): Promise<Book> {
-        return this.booksService.addBook(book);
+    async addNewBook(@Body() createBookDto: CreateBookDto): Promise<Book> {
+        return this.booksService.addBook(createBookDto);
+    }
+    
+    @Get('search')
+    async searchBook(@Query() query: ExpressQuery): Promise<Book[]> {
+        return await this.booksService.searchBook(query);
     }
 
     @Get(':id')
@@ -27,8 +32,8 @@ export class BooksController {
     } 
 
     @Put(':id')
-    async updateBook(@Param('id') id: string, @Body() book: UpdateBookDto): Promise<Book> {
-        return await this.booksService.updateBook(id, book);
+    async updateBook(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto): Promise<Book> {
+        return await this.booksService.updateBook(id, updateBookDto);
     }
     
     @Delete(':id')
@@ -36,8 +41,4 @@ export class BooksController {
         return await this.booksService.deleteBook(id);
     }
 
-    @Get('search')
-    async searchBook(@Query() query: ExpressQuery): Promise<Book[]> {
-        return await this.booksService.searchBook(query);
-    }
 }
