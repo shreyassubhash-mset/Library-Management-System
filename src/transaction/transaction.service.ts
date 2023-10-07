@@ -28,6 +28,9 @@ export class TransactionService {
             status: 'Borrowed',
             borrowedDate: new Date(),
         })
+       borrowedBook.status = 'Not available';
+       await borrowedBook.save();
+
 
         return transaction;
     }
@@ -42,12 +45,16 @@ export class TransactionService {
         transaction.status = 'Returned';
         transaction.returnedDate = new Date();
 
+        const borrowedBook = await this.booksModel.findById(transaction.book);
+        borrowedBook.status = 'Available';
+        await borrowedBook.save();
+
         await transaction.save();
         return transaction;
     }
 
     async transactionHistory(userId: string): Promise<Transaction[]> {
-        const transactions = await this.transactionModel.find({ user: userId });
+        const transactions = await this.transactionModel.find({ user: userId }).populate('book');
 
         if(!transactions) {
             throw new NotFoundException('No transaction history found');

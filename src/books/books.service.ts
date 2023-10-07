@@ -10,14 +10,8 @@ import { UpdateBookDto } from './dto/updatebook.dto';
 export class BooksService {
     constructor(@InjectModel(Book.name) private readonly bookModel: mongoose.Model<Book>) {}
     
-    async allBooks(query: Query): Promise<Book[]> {
-
-        const bookPerPage = 2;
-        const currentPage = Number(query.page) || 1;
-        const skipBooks = bookPerPage * (currentPage - 1);
-
-
-        const allBooks = await this.bookModel.find().limit(bookPerPage).skip(skipBooks);
+    async allBooks(): Promise<Book[]> {
+        const allBooks = await this.bookModel.find();
         return allBooks;
     }
 

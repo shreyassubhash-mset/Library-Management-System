@@ -12,8 +12,8 @@ export class BooksController {
 
     @Get()
     @UseGuards(AuthGuard())
-    async getAllBooks(@Query() query: ExpressQuery): Promise<Book[]> {
-        return this.booksService.allBooks(query);
+    async getAllBooks(): Promise<Book[]> {
+        return this.booksService.allBooks();
     }
 
     @Post('add')
