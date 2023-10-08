@@ -13,6 +13,9 @@ export enum Category {
 
 export class Book extends Document{
 
+    @Prop()
+    image: string;
+
     @Prop({required: true, unique: true})
     title: string;
 
@@ -27,6 +30,8 @@ export class Book extends Document{
 
     @Prop({enum: ['Available', 'Not available'], default: 'Available'})
     status: string;
+
+
 }
 
 export const BooksSchema = SchemaFactory.createForClass(Book)

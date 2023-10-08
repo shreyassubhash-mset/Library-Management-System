@@ -23,7 +23,6 @@ export class BooksController {
     }
     
     @Get('search')
-    @UseGuards(AuthGuard())
     async searchBook(@Query() query: ExpressQuery): Promise<Book[]> {
         return await this.booksService.searchBook(query);
     }

@@ -1,7 +1,12 @@
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Category } from '../schema/books.schema';
 
 export class CreateBookDto {
+
+    @IsOptional()
+    @IsString()
+    readonly image: string;
+    
     @IsNotEmpty()
     @IsString()
     readonly title: string;

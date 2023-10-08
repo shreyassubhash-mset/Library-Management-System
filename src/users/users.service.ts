@@ -56,7 +56,6 @@ export class UsersService {
    async editUser(userId: string, updateUserDto: Partial<User>): Promise<User> {
       const updatedUser = await this.userModel.findByIdAndUpdate(userId, updateUserDto, {
          new: true,
-         runValidators: true,
       });
    
       if (!updatedUser) {

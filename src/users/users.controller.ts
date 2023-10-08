@@ -27,7 +27,6 @@ export class UsersController {
     }
 
     @Put(':id')
-    @UseGuards(AuthGuard())
     updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
         return this.usersService.editUser(id, updateUserDto);
     }

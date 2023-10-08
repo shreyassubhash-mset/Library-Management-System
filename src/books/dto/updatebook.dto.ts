@@ -5,6 +5,10 @@ export class UpdateBookDto {
 
     @IsOptional()
     @IsString()
+    readonly image: string;
+
+    @IsOptional()
+    @IsString()
     readonly title: string;
 
     @IsOptional()
