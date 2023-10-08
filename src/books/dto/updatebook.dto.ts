@@ -4,8 +4,7 @@ import { Category } from "../schema/books.schema";
 export class UpdateBookDto {
 
     @IsOptional()
-    @IsString()
-    readonly image: string;
+    readonly image: Express.Multer.File;
 
     @IsOptional()
     @IsString()

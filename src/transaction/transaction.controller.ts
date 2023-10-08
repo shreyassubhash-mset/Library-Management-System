@@ -2,19 +2,24 @@ import { Controller, Post, Param, Body, Get, UseGuards } from '@nestjs/common';
 import { TransactionService } from './transaction.service';
 import { Transaction } from './schema/transaction.schema';
 import { AuthGuard } from '@nestjs/passport';
+import { WebsocketGateway } from 'src/websocket/websocket.gateway';
 
 @Controller('transaction')
 export class TransactionController {
-    constructor(private readonly transactionService: TransactionService) {}
+    constructor(private readonly transactionService: TransactionService, private readonly websocketGateway: WebsocketGateway) {}
 
     @Post('borrow/:userId/:bookId')
     async borrowBook(@Param('userId') userId: string, @Param('bookId') bookId: string): Promise<Transaction> {
-        return this.transactionService.borrowBook(userId, bookId);
+      const transaction = this.transactionService.borrowBook(userId, bookId);
+       this.websocketGateway.sendBorrowNotification(userId, bookId);
+      return transaction;
     }
 
     @Post('return/:id')
     async returnBook(@Param('id') id: string): Promise<Transaction> {
-        return this.transactionService.returnBook(id);
+      const transaction = this.transactionService.returnBook(id);
+      this.websocketGateway.sendReturnNotification(id);  
+      return transaction;
     }
 
     @Get('history/:userId')

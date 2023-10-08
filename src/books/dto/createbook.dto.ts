@@ -1,11 +1,11 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { Category } from '../schema/books.schema';
+import { Express } from 'express';
 
 export class CreateBookDto {
 
     @IsOptional()
-    @IsString()
-    readonly image: string;
+    readonly image: Express.Multer.File;
     
     @IsNotEmpty()
     @IsString()

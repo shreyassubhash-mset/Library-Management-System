@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { TransactionModule } from './transaction/transaction.module';
+import { WebsocketGateway } from './websocket/websocket.gateway';
+
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { TransactionModule } from './transaction/transaction.module';
     MongooseModule.forRoot(process.env.mongodb_url),
     BooksModule,
     TransactionModule,
+    WebsocketGateway
   ],
+  providers: [WebsocketGateway]
 })
 export class AppModule {}

@@ -16,8 +16,25 @@ export class BooksService {
     }
 
     async addBook(createBookDto: CreateBookDto): Promise<Book> {
-        const newBook = await this.bookModel.create(createBookDto);
-        return newBook;
+        
+        const { image, title, description, author, category } = createBookDto;
+    let newBook: Book;
+
+    if (image) {
+      // Handle image upload and store the filename
+      const imageFileName = image.filename; // Assuming Multer has stored the image
+      newBook = await this.bookModel.create({
+        title,
+        description,
+        author,
+        category,
+        image: imageFileName,
+      });
+    } else {
+      newBook = await this.bookModel.create(newBook);
+    }
+
+    return newBook;
     }
 
     async selectBook(id: string): Promise<Book> {
