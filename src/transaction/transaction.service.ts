@@ -54,7 +54,7 @@ export class TransactionService {
     }
 
     async transactionHistory(userId: string): Promise<Transaction[]> {
-        const transactions = await this.transactionModel.find({ user: userId }).populate('book');
+        const transactions = await this.transactionModel.find({ user: userId }).populate('book').sort({createdAt: -1});
 
         if(!transactions) {
             throw new NotFoundException('No transaction history found');

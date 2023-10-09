@@ -12,11 +12,12 @@ async function bootstrap() {
   });
 
   const storage = multer.diskStorage({
-    destination: '../images',
-    filename(req, file, callback) {
+    destination: './images',
+    filename(req, image, callback) {
       const uniqueSuffix =
         Date.now() + '-' + Math.round(Math.random() * 1e9);
-      callback(null, file.fieldname + '-' + uniqueSuffix);
+        const fileExt = image.originalname.split('.').pop();
+      callback(null, image.fieldname + '-' + uniqueSuffix + '.' + fileExt );
     },
   });
   app.use(multer({ storage: storage }).single('image'));

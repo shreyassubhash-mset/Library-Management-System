@@ -16,11 +16,11 @@ export class WebsocketGateway
   }
 
   // Implement methods to send notifications to connected clients
-  sendBorrowNotification(userId: string ,bookId: string) {
-    this.server.emit('borrowed', { userId, bookId });
+  sendBorrowNotification() {
+    this.server.emit('borrowed', "Borrowed Successfully");
   }
 
-  sendReturnNotification(bookId: string) {
-    this.server.emit('returned', { bookId });
+  sendReturnNotification() {
+    this.server.emit('returned', "Returned Book");
   }
 }

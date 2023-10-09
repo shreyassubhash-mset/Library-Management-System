@@ -11,27 +11,40 @@ export class BooksService {
     constructor(@InjectModel(Book.name) private readonly bookModel: mongoose.Model<Book>) {}
     
     async allBooks(): Promise<Book[]> {
-        const allBooks = await this.bookModel.find();
+        const allBooks = await this.bookModel.find().sort({createdAt: -1});
         return allBooks;
     }
 
-    async addBook(createBookDto: CreateBookDto): Promise<Book> {
+    async addBook(createBookDto: CreateBookDto, image: Express.Multer.File ): Promise<Book> {
         
-        const { image, title, description, author, category } = createBookDto;
+        const { title, description, author, category } = createBookDto;
     let newBook: Book;
 
     if (image) {
       // Handle image upload and store the filename
-      const imageFileName = image.filename; // Assuming Multer has stored the image
-      newBook = await this.bookModel.create({
-        title,
-        description,
-        author,
-        category,
-        image: imageFileName,
-      });
+      try {
+        // Handle image upload and store the filename
+        const imageFileName = image.filename; // Assuming Multer has stored the image
+        newBook = await this.bookModel.create({
+          title,
+          description,
+          author,
+          category,
+          image: imageFileName,
+        });
+      } catch (error) {
+        // Handle the error here and return an appropriate response
+        console.error('Error during image upload:', error);
+        throw new BadRequestException('Failed to upload the image.');
+      }
     } else {
-      newBook = await this.bookModel.create(newBook);
+        try{
+            newBook = await this.bookModel.create(createBookDto);
+
+        } catch (error) {
+            console.error("Failed to add book", error);
+    
+        }
     }
 
     return newBook;
@@ -74,7 +87,9 @@ export class BooksService {
                 $options: 'i'
             }
         } : {}
-        const books = await this.bookModel.find({ ...keyword }); 
+        const books = await this.bookModel.find({ ...keyword }).sort({createdAt: -1}); 
         return books;
     }
+
+
 }
