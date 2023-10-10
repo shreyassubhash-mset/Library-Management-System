@@ -32,10 +32,10 @@ export class BooksController {
             }
         })
     }))
-    @UseGuards(AuthGuard())
     async addNewBook(@UploadedFile() image: Express.Multer.File , @Body() createBookDto: CreateBookDto): Promise<Book> {
         try {
             const book =  this.booksService.addBook(createBookDto, image);
+            console.log(image);
             return book;
 
         } catch(error) {
