@@ -7,9 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
-  imports: [MulterModule.register({
-    dest: 'C:/Users/SHREYAS/Documents/GitHub/library-management-system/images', // Define the upload destination directory
-  }),
+  imports: [
   UsersModule, MongooseModule.forFeature([{ name: 'Book', schema: BooksSchema }])],
   controllers: [BooksController],
   providers: [BooksService]

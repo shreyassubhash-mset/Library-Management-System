@@ -7,6 +7,8 @@ import { CreateBookDto } from './dto/createbook.dto';
 import { UpdateBookDto } from './dto/updatebook.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+import * as path from 'path';
+import { diskStorage } from 'multer';
 
 
 @Controller('books')
@@ -20,9 +22,26 @@ export class BooksController {
     }
 
     @Post('add')
+    @UseInterceptors(FileInterceptor('image', {
+        storage: diskStorage({
+            destination: './images',
+            filename: (req, file, callBack) => {
+                const fileName = path.parse(file.originalname).name.replace(/\s/g, '') + Date.now();
+                const extension = path.parse(file.originalname).ext;
+                callBack(null, `${fileName}${extension}`);
+            }
+        })
+    }))
     @UseGuards(AuthGuard())
-    async addNewBook(@Body() createBookDto: CreateBookDto): Promise<Book> {
-        return await this.booksService.addBook(createBookDto);
+    async addNewBook(@UploadedFile() image: Express.Multer.File , @Body() createBookDto: CreateBookDto): Promise<Book> {
+        try {
+            const book =  this.booksService.addBook(createBookDto, image);
+            return book;
+
+        } catch(error) {
+            console.log("failed to add book", error);
+            throw error;
+        }
 
     }
 

@@ -11,14 +11,12 @@ export class TransactionController {
     @Post('borrow/:userId/:bookId')
     async borrowBook(@Param('userId') userId: string, @Param('bookId') bookId: string): Promise<Transaction> {
       const transaction = this.transactionService.borrowBook(userId, bookId);
-       this.websocketGateway.sendBorrowNotification();
       return transaction;
     }
 
     @Post('return/:id')
     async returnBook(@Param('id') id: string): Promise<Transaction> {
       const transaction = this.transactionService.returnBook(id);
-      this.websocketGateway.sendReturnNotification();  
       return transaction;
     }
 

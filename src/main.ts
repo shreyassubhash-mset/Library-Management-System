@@ -17,6 +17,8 @@ async function bootstrap() {
 
   app.use(express.static(__dirname +'./images/'));
 
+  app.use('/images', express.static('./images/'));
+
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }
