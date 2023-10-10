@@ -17,20 +17,6 @@ async function bootstrap() {
 
   app.use(express.static(__dirname +'./images/'));
 
-  const storage = multer.diskStorage({
-    destination: 'C:/Users/SHREYAS/Documents/GitHub/library-management-system/images/',
-    filename(req, file, callback) {
-      const uniqueSuffix =
-        Date.now() + '-' + Math.round(Math.random() * 1e9);
-        const fileExt = file.originalname.split('.').pop();
-      callback(null, file.fieldname + '-' + uniqueSuffix + '.' + fileExt );
-    },
-  });
-
-  const upload = multer({ storage: storage }).single('image');
-  app.use(upload);
-
-
   app.useGlobalPipes(new ValidationPipe());
   await app.listen(3000);
 }

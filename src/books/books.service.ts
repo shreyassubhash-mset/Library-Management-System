@@ -15,28 +15,13 @@ export class BooksService {
         return allBooks;
     }
 
-    async addBook(createBookDto: CreateBookDto, image: Express.Multer.File): Promise<Book> {
+    async addBook(createBookDto: CreateBookDto): Promise<Book> {
         try {
-          const { title, description, author, category } = createBookDto;
-          let newBook: Book;
-      
-          if (image) {
-            const imageFileName = image.filename; 
-            newBook = await this.bookModel.create({
-              title,
-              description,
-              author,
-              category,
-              image: imageFileName,
-            });
-          } else {
-            newBook = await this.bookModel.create(createBookDto);
-          }
-      
+            let newBook = await this.bookModel.create(createBookDto);
+    
           return newBook;
         } catch (error) {
-          console.error('Error during image upload:', error);
-          throw new BadRequestException('Failed to upload the image.');
+          console.error('Failed to add book', error);
         }
       }
       

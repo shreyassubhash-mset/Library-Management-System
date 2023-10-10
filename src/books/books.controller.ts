@@ -20,17 +20,9 @@ export class BooksController {
     }
 
     @Post('add')
-    @UseInterceptors(FileInterceptor('image'))
     @UseGuards(AuthGuard())
-    async addNewBook(@UploadedFile() image: Express.Multer.File , @Body() createBookDto: CreateBookDto): Promise<Book> {
-        try {
-            const book =  this.booksService.addBook(createBookDto, image);
-            return book;
-
-        } catch(error) {
-            console.log("failed to add book", error);
-            throw error;
-        }
+    async addNewBook(@Body() createBookDto: CreateBookDto): Promise<Book> {
+        return await this.booksService.addBook(createBookDto);
 
     }
 

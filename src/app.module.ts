@@ -17,9 +17,6 @@ import { MulterModule } from '@nestjs/platform-express';
     }),
     MongooseModule.forRoot(process.env.mongodb_url),
     BooksModule,
-    MulterModule.register({
-      dest: 'C:/Users/SHREYAS/Documents/GitHub/library-management-system/images',
-    }),
     TransactionModule,
     WebsocketGateway
   ],
