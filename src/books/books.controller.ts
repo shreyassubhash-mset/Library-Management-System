@@ -1,11 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, NotFoundException, Param, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { Book } from './schema/books.schema';
 import { Query as ExpressQuery } from 'express-serve-static-core';
+import { Express } from 'express'; 
 import { CreateBookDto } from './dto/createbook.dto';
 import { UpdateBookDto } from './dto/updatebook.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FileInterceptor } from '@nestjs/platform-express';
+
 
 @Controller('books')
 export class BooksController {
@@ -18,19 +20,20 @@ export class BooksController {
     }
 
     @Post('add')
-    @UseGuards(AuthGuard())
     @UseInterceptors(FileInterceptor('image'))
-    async addNewBook(@UploadedFile() image: Express.Multer.File,@Body() createBookDto: CreateBookDto): Promise<Book> {
+    @UseGuards(AuthGuard())
+    async addNewBook(@UploadedFile() image: Express.Multer.File , @Body() createBookDto: CreateBookDto): Promise<Book> {
         try {
             const book =  this.booksService.addBook(createBookDto, image);
             return book;
 
         } catch(error) {
             console.log("failed to add book", error);
+            throw error;
         }
-        console.log(image);
 
     }
+
     
     @Get('search')
     async searchBook(@Query() query: ExpressQuery): Promise<Book[]> {

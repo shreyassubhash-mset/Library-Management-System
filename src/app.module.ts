@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
+import { MulterModule } from '@nestjs/platform-express';
 
 
 @Module({
@@ -16,6 +17,9 @@ import { WebsocketGateway } from './websocket/websocket.gateway';
     }),
     MongooseModule.forRoot(process.env.mongodb_url),
     BooksModule,
+    MulterModule.register({
+      dest: 'C:/Users/SHREYAS/Documents/GitHub/library-management-system/images',
+    }),
     TransactionModule,
     WebsocketGateway
   ],

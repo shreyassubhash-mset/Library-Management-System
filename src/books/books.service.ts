@@ -15,40 +15,31 @@ export class BooksService {
         return allBooks;
     }
 
-    async addBook(createBookDto: CreateBookDto, image: Express.Multer.File ): Promise<Book> {
-        
-        const { title, description, author, category } = createBookDto;
-    let newBook: Book;
-
-    if (image) {
-      // Handle image upload and store the filename
-      try {
-        // Handle image upload and store the filename
-        const imageFileName = image.filename; // Assuming Multer has stored the image
-        newBook = await this.bookModel.create({
-          title,
-          description,
-          author,
-          category,
-          image: imageFileName,
-        });
-      } catch (error) {
-        // Handle the error here and return an appropriate response
-        console.error('Error during image upload:', error);
-        throw new BadRequestException('Failed to upload the image.');
-      }
-    } else {
-        try{
+    async addBook(createBookDto: CreateBookDto, image: Express.Multer.File): Promise<Book> {
+        try {
+          const { title, description, author, category } = createBookDto;
+          let newBook: Book;
+      
+          if (image) {
+            const imageFileName = image.filename; 
+            newBook = await this.bookModel.create({
+              title,
+              description,
+              author,
+              category,
+              image: imageFileName,
+            });
+          } else {
             newBook = await this.bookModel.create(createBookDto);
-
+          }
+      
+          return newBook;
         } catch (error) {
-            console.error("Failed to add book", error);
-    
+          console.error('Error during image upload:', error);
+          throw new BadRequestException('Failed to upload the image.');
         }
-    }
-
-    return newBook;
-    }
+      }
+      
 
     async selectBook(id: string): Promise<Book> {
         const isValidId = mongoose.isValidObjectId(id)
