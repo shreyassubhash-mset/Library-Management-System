@@ -1,26 +1,36 @@
-import { OnModuleInit } from '@nestjs/common';
-import { MessageBody, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
+// notifications.gateway.ts
+import { WebSocketGateway, WebSocketServer, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',
+    origin: 'http://localhost:4200',  
   }
 })
-export class WebsocketGateway implements OnModuleInit{
-  @WebSocketServer()
-  server: Server;
+export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+  @WebSocketServer() server: Server;
 
-  onModuleInit() {
-      this.server.on('connection', (socket) => {
-        console.log(socket.id);
-        console.log("connected");
-      })
+  handleConnection(client: any) {
+    // Handle new WebSocket connection
+    console.log(client.id);
+    console.log("Connected");
   }
 
-  @SubscribeMessage('notification')
-  onNotification(@MessageBody() body: any) {
-    console.log(body);
-    this.server.emit('onNotification', body);
+  handleDisconnect(client: any) {
+
+    console.log(client.id);
+    console.log("Disconnected");
+  }
+
+  @SubscribeMessage('borrowed')
+  handleBorrowedEvent(client: any, payload: any) {
+    // Handle book borrowed event
+    this.server.emit('bookBorrowed', payload);
+  }
+
+  @SubscribeMessage('returned')
+  handleReturnedEvent(client: any, payload: any) {
+    // Handle book returned event
+    this.server.emit('bookReturned', payload);
   }
 }

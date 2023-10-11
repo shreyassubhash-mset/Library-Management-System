@@ -5,8 +5,6 @@ import { UsersModule } from './users/users.module';
 import { BooksModule } from './books/books.module';
 import { TransactionModule } from './transaction/transaction.module';
 import { WebsocketGateway } from './websocket/websocket.gateway';
-import { MulterModule } from '@nestjs/platform-express';
-import { ImageModule } from './image/image.module';
 
 
 @Module({
@@ -19,8 +17,6 @@ import { ImageModule } from './image/image.module';
     MongooseModule.forRoot(process.env.mongodb_url),
     BooksModule,
     TransactionModule,
-    WebsocketGateway,
-    ImageModule
   ],
   providers: [WebsocketGateway]
 })

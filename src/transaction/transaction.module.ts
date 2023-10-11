@@ -5,7 +5,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { TransactionSchema } from './schema/transaction.schema';
 import { UsersSchema } from 'src/users/schema/users.schema';
 import { BooksSchema } from 'src/books/schema/books.schema';
-import { WebsocketGateway} from '../websocket/websocket.gateway';
 
 @Module({
   imports: [MongooseModule.forFeature([
@@ -13,6 +12,6 @@ import { WebsocketGateway} from '../websocket/websocket.gateway';
     {name: 'User', schema: UsersSchema},
     { name: 'Book', schema: BooksSchema }])],
   controllers: [TransactionController],
-  providers: [TransactionService, WebsocketGateway]
+  providers: [TransactionService]
 })
 export class TransactionModule {}
