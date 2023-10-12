@@ -13,23 +13,28 @@ export class TransactionService {
     async borrowBook(userId: string, bookId: string): Promise<Transaction> {
         const borrowedDate = moment().format('YYYY-MM-DD');
 
-        const borrowedBook = await this.booksModel.findById(bookId);
+        const borrowedBook = await this.booksModel
+      .findById(bookId)
+      .exec();
 
         if(!borrowedBook) {
             throw new NotFoundException('Book not found');
         }
 
-        const borrowedUser = await this.usersModel.findById(userId);
+        const borrowedUser = await this.usersModel
+      .findById(userId)
+      .exec();
 
         if(!borrowedUser) {
             throw new NotFoundException('User not found');
         }
 
         const transaction = await this.transactionModel.create({
-            user: userId,
-            book: bookId,
+            user: borrowedUser,
+            book: borrowedBook,
             status: 'Borrowed',
             borrowedDate,
+            returnedDate: 'Current',
         })
        borrowedBook.status = 'Not available';
        await borrowedBook.save();
@@ -52,6 +57,8 @@ export class TransactionService {
         const borrowedBook = await this.booksModel.findById(transaction.book);
         borrowedBook.status = 'Available';
         await borrowedBook.save();
+
+        transaction.book = borrowedBook;
 
         await transaction.save();
         return transaction;

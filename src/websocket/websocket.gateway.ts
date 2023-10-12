@@ -33,4 +33,16 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     // Handle book returned event
     this.server.emit('bookReturned', payload);
   }
+
+  @SubscribeMessage('create')
+  handleCreatedEvent(client: any, payload: any) {
+
+    this.server.emit('bookCreated', payload);
+  }
+
+  @SubscribeMessage('deleted')
+  handleDeletedEvent(client: any, payload: any) {
+
+    this.server.emit('bookDeleted',payload );
+  }
 }
