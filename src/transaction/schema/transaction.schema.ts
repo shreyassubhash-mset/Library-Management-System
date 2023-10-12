@@ -16,11 +16,11 @@ export class Transaction extends mongoose.Document {
     @Prop({ required: true, enum: [ 'Borrowed', 'Returned' ] })
     status: string;
 
-    @Prop({ required: true, type: Date })
-    borrowedDate: Date;
+    @Prop({ required: true})
+    borrowedDate: string;
 
-    @Prop({ type: Date })
-    returnedDate: Date; // Optional, as it's only set when the book is returned
+    @Prop()
+    returnedDate: string; 
 }
 
 export const TransactionSchema = SchemaFactory.createForClass(Transaction);

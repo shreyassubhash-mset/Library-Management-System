@@ -4,12 +4,15 @@ import { Transaction } from './schema/transaction.schema';
 import { Model } from 'mongoose';
 import { Book } from 'src/books/schema/books.schema';
 import { User } from 'src/users/schema/users.schema';
+import * as moment from 'moment';
 
 @Injectable()
 export class TransactionService {
     constructor(@InjectModel(Transaction.name) private readonly transactionModel: Model<Transaction>, @InjectModel(Book.name) private readonly booksModel: Model<Book>, @InjectModel(User.name) private readonly usersModel: Model<User>) {}
 
     async borrowBook(userId: string, bookId: string): Promise<Transaction> {
+        const borrowedDate = moment().format('YYYY-MM-DD');
+
         const borrowedBook = await this.booksModel.findById(bookId);
 
         if(!borrowedBook) {
@@ -26,7 +29,7 @@ export class TransactionService {
             user: userId,
             book: bookId,
             status: 'Borrowed',
-            borrowedDate: new Date(),
+            borrowedDate,
         })
        borrowedBook.status = 'Not available';
        await borrowedBook.save();
@@ -36,6 +39,7 @@ export class TransactionService {
     }
 
     async returnBook(id: string): Promise<Transaction> {
+        const returnDate = moment().format('YYYY-MM-DD');
         const transaction = await this.transactionModel.findById(id);
 
         if(!transaction) {
@@ -43,7 +47,7 @@ export class TransactionService {
         }
 
         transaction.status = 'Returned';
-        transaction.returnedDate = new Date();
+        transaction.returnedDate = returnDate;
 
         const borrowedBook = await this.booksModel.findById(transaction.book);
         borrowedBook.status = 'Available';
