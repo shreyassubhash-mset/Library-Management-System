@@ -18,7 +18,13 @@ export class BooksController {
     @Get()
     @UseGuards(AuthGuard())
     async getAllBooks(): Promise<Book[]> {
-        return this.booksService.allBooks();
+        try{
+            const book = this.booksService.allBooks();
+            return book
+        } catch (error) {
+            console.log("Failed to get all books",error);
+            throw error;
+        }
     }
 
     @Post('add')
@@ -48,25 +54,52 @@ export class BooksController {
     
     @Get('search')
     async searchBook(@Query() query: ExpressQuery): Promise<Book[]> {
-        return await this.booksService.searchBook(query);
+        try{
+            const book = await this.booksService.searchBook(query);
+            console.log(book);
+            return book;
+        } catch(error) {
+            console.log("Error finding book",error);
+            throw error;
+        }
     }
 
     @Get(':id')
     @UseGuards(AuthGuard())
     async getSelectedBook(@Param('id') id: string): Promise<Book> {
-        return await this.booksService.selectBook(id);
+        try{
+            const book = await this.booksService.selectBook(id);
+            console.log(book);
+            return book;
+        } catch (error) {
+            console.log("Failed to get Book by id", error);
+            throw error;
+        }
     } 
 
     @Put(':id')
     @UseGuards(AuthGuard())
     async updateBook(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto): Promise<Book> {
-        return await this.booksService.updateBook(id, updateBookDto);
+        try{
+            const book = await this.booksService.updateBook(id, updateBookDto);
+            console.log(book);
+            return book;
+        } catch(error) {
+            console.log("Failed to edit selected book",error);
+            throw error;
+        }
     }
     
     @Delete(':id')
     @UseGuards(AuthGuard())
     async deleteBook(@Param('id') id: string): Promise<Book> {
-        return await this.booksService.deleteBook(id);
+        try{ 
+            const book = await this.booksService.deleteBook(id);
+            console.log(book);
+            return book;
+        } catch (error) {
+            console.log(error);
+        }
     }
 
 }

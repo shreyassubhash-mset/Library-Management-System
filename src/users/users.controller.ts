@@ -12,23 +12,51 @@ export class UsersController {
 
     @Post('register')
     registerUser(@Body() createUserDto: CreateUserDto): Promise<{ token: string }> {
-        return this.usersService.register(createUserDto);
+        try{
+            const user = this.usersService.register(createUserDto);
+            console.log(user);
+            return user;
+        } catch(error) {
+            console.log("Failed to register user",error);
+            throw error;
+        }
     }
 
     @Post('login')
     loginUser(@Body() loginUserDto: LoginUserDto): Promise<{ token: string }> {
-        return this.usersService.loginuser(loginUserDto);
+        try{
+            const user = this.usersService.loginuser(loginUserDto);
+            console.log(user);
+            return user;
+        } catch(error) {
+            console.log("Failed to login",error);
+            throw error;
+        }
     }
 
     @Get(':id')
     @UseGuards(AuthGuard())
     getUser(@Param('id') id: string): Promise<User> {
-        return this.usersService.getUserDetails(id);
+        try {
+            const user = this.usersService.getUserDetails(id);
+            console.log(user);
+            return user;
+        } catch (error) {
+            console.log("Failed to fetch user details", error);
+            throw error;
+        }
     }
 
     @Put(':id')
     updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User> {
-        return this.usersService.editUser(id, updateUserDto);
+        try{
+            const user = this.usersService.editUser(id, updateUserDto);
+            console.log(user);
+            return user;
+        } catch(error) {
+            console.log("Failed to edit user details",error);
+            throw error;
+        }
     }
 
 }
