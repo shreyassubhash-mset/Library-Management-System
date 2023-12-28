@@ -14,4 +14,4 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Run External Code Review Action
-        uses: shreyassubhash-mset/trial-plugin@main
+        uses: shreyassubhash-mset/Trial-plugin@main
