@@ -1,0 +1,17 @@
+name: Code Review
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  review-code:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Run External Code Review Action
+        uses: shreyassubhash-mset/trial-plugin@main
